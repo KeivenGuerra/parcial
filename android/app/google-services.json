@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "414802445917",
+    "project_id": "app-parcial-keiven",
+    "storage_bucket": "app-parcial-keiven.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:414802445917:android:c302025ff02b925653afb4",
+        "android_client_info": {
+          "package_name": "com.example.app_parcial"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAAwWdJwGP5kEOd5g709S3YOFfmoPOSYOI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
