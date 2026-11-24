@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -34,9 +33,7 @@ class _AuthScreenState extends State<AuthScreen> {
           password: _passwordController.text.trim(),
         );
 
-        await credential.user?.updateDisplayName(
-          _nameController.text.trim(),
-        );
+        await credential.user?.updateDisplayName(_nameController.text.trim());
       } else {
         await _auth.signInWithEmailAndPassword(
           email: _emailController.text.trim(),
@@ -62,15 +59,13 @@ class _AuthScreenState extends State<AuthScreen> {
 
       if (!mounted) return;
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(message)),
-      );
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(message)));
     } catch (e) {
       if (!mounted) return;
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: $e')),
-      );
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Error: $e')));
     } finally {
       if (mounted) setState(() => _loading = false);
     }
@@ -86,14 +81,40 @@ class _AuthScreenState extends State<AuthScreen> {
     } on FirebaseAuthException catch (e) {
       if (!mounted) return;
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error de Google: ${e.message}')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error de Google: ${e.message}')));
     } catch (e) {
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('No se pudo iniciar con Google')),
+      );
+    } finally {
+      if (mounted) setState(() => _loading = false);
+    }
+  }
+
+  Future<void> _signInWithFacebook() async {
+    setState(() => _loading = true);
+
+    try {
+      final FacebookAuthProvider facebookProvider = FacebookAuthProvider();
+
+      facebookProvider.addScope('email');
+
+      await FirebaseAuth.instance.signInWithPopup(facebookProvider);
+    } on FirebaseAuthException catch (e) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error de Facebook: ${e.message}')),
+      );
+    } catch (e) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('No se pudo iniciar con Facebook')),
       );
     } finally {
       if (mounted) setState(() => _loading = false);
@@ -156,8 +177,8 @@ class _AuthScreenState extends State<AuthScreen> {
                         ),
                         validator: (value) =>
                             value == null || value.trim().isEmpty
-                                ? 'Ingresa tu nombre'
-                                : null,
+                            ? 'Ingresa tu nombre'
+                            : null,
                       ),
 
                     if (_isRegister) const SizedBox(height: 15),
@@ -234,9 +255,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                 color: Colors.white,
                               )
                             : Text(
-                                _isRegister
-                                    ? 'Registrarse'
-                                    : 'Iniciar sesión',
+                                _isRegister ? 'Registrarse' : 'Iniciar sesión',
                               ),
                       ),
                     ),
@@ -250,6 +269,22 @@ class _AuthScreenState extends State<AuthScreen> {
                         onPressed: _loading ? null : _signInWithGoogle,
                         icon: const Icon(Icons.g_mobiledata, size: 30),
                         label: const Text('Continuar con Google'),
+                      ),
+                    ),
+
+                    const SizedBox(height: 10),
+
+                    SizedBox(
+                      width: double.infinity,
+                      height: 50,
+                      child: ElevatedButton.icon(
+                        onPressed: _loading ? null : _signInWithFacebook,
+                        icon: const Icon(Icons.facebook, color: Colors.white),
+                        label: const Text('Continuar con Facebook'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF1877F2),
+                          foregroundColor: Colors.white,
+                        ),
                       ),
                     ),
 
